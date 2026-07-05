@@ -9,6 +9,7 @@
 #include <map>
 
 #include "InputManager_Combat.h"
+#include "TiledMap.h"
 
 Renderer::Renderer(int width, int height) {
  this->width = width;
@@ -21,9 +22,19 @@ void Renderer::render() const {
  int gridPixelHeight = gridlogic->gridheight * gridvisuals->tileSize;
  int startX = (width - gridPixelWidth) /2;
  int startY = (height - gridPixelHeight) /2;
- gridvisuals->updateVisuals(gridmap, startX, startY);
+ // draw the map first
+ tiledMap->draw(startX, startY);
+ // draw highlights above the map
+ gridvisuals->drawHighlightedCells();
+ // draw the current hovered cell over highlights
  auto hoveredcell = this->inputmanager->getHoveredCell();
  gridvisuals->drawHoveredCell(hoveredcell);
+ // render units above the current hovered cell.
+
+ // then render objects since we want objects over units
+
+ // draw grid outline last so it always shows the grid.
+ gridvisuals->updateVisuals(gridmap, startX, startY);
 };
 
 gridlayout Renderer::getGridLayout() const
@@ -39,4 +50,8 @@ gridlayout Renderer::getGridLayout() const
  gridLayout.startY = startY;
  gridLayout.tileSize = gridvisuals->tileSize;
  return gridLayout;
+}
+
+void Renderer::setTileMap(TiledMap *tilemap) {
+ this->tiledMap = tilemap;
 }

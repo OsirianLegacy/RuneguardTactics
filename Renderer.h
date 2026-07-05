@@ -8,12 +8,15 @@
 #include "GridLogic.h"
 
 class InputManager_Combat;
+class TiledMap;
 
 class Renderer {
 public:
+    TiledMap* tiledMap = nullptr;
     Renderer(int width, int height);
     void render() const;
     [[nodiscard]] gridlayout getGridLayout() const;
+    void setTileMap(TiledMap *tilemap);
     int width;
     int height;
     GridVisuals *gridvisuals;

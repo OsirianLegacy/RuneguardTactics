@@ -6,6 +6,7 @@
 #include <raylib.h>
 #include "Renderer.h"
 #include "GridStructs.h"
+#include <iostream>
 
 InputManager_Combat::InputManager_Combat(Renderer& inputrenderer)
     : renderer(inputrenderer)
@@ -36,7 +37,8 @@ void InputManager_Combat::setHoveredCell()
 }
 
 
-cell InputManager_Combat::getHoveredCell() const {
+cell InputManager_Combat::getHoveredCell() const
+{
     return hoveredCell;
 }
 
@@ -64,19 +66,41 @@ bool InputManager_Combat::isMouseInGrid()
     return mouseInGrid;
 }
 
-void InputManager_Combat::update() {
+void InputManager_Combat::update()
+{
     this->setHoveredCell();
 }
 
 
-bool InputManager_Combat::wasLeftClicked() {
+bool InputManager_Combat::wasLeftClicked()
+{
     return IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }
 
-bool InputManager_Combat::wasRightClicked() {
+void InputManager_Combat::resolveLeftClick()
+{
+    if (isMouseInWindow() && isMouseInGrid())
+    {
+        if (bool leftclicked = wasLeftClicked())
+        {
+            clickedCell = getHoveredCell();
+            std::cout << "Cell was clicked: " << clickedCell.coordinates.x << "," << clickedCell.coordinates.y << "\n";
+        }
+    }
+}
+
+cell InputManager_Combat::getClickedCell() const
+{
+    return clickedCell;
+}
+
+
+bool InputManager_Combat::wasRightClicked()
+{
     return IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
 }
 
-bool InputManager_Combat::wasSpacePressed() {
+bool InputManager_Combat::wasSpacePressed()
+{
     return IsKeyPressed(KEY_SPACE);
 }

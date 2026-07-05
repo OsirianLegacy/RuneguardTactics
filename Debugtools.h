@@ -10,7 +10,7 @@
 #include <iomanip>
 #include <iostream>
 #include <string_view>
-
+// Please note this entire script was written by Codex. I wanted a quick way to test performance of functions.
 namespace debugtools {
 
     inline void printFormattedNano(const long long nanoseconds) {

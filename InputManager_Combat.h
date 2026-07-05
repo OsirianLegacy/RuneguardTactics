@@ -14,17 +14,21 @@ public:
     explicit InputManager_Combat(Renderer& inputrenderer);
     [[nodiscard]] static Vector2 getMousePosition() ;
     [[nodiscard]] cell getHoveredCell() const;
+    [[nodiscard]] cell getClickedCell() const;
     [[nodiscard]] static bool isMouseInWindow() ;
     [[nodiscard]] static bool wasLeftClicked();
     [[nodiscard]] static bool wasRightClicked();
     [[nodiscard]] static bool wasSpacePressed();
+    void resolveLeftClick();
+    void resolveRightClick();
+    bool isMouseInGrid();
     void update();
 
 private:
     cell previousCell;
     cell hoveredCell;
+    cell clickedCell = {{0,0}, false, 1, celltype::empty};
     void setHoveredCell();
-    bool isMouseInGrid();
     Renderer& renderer;
 };
 
