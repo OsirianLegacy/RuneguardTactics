@@ -21,3 +21,12 @@ struct cell
     int cost = 1;
     enum celltype type = celltype::empty;
 };
+
+struct gridlayout
+{
+    int startX;
+    int startY;
+    int tileSize;
+    int gridWidth;
+    int gridHeight;
+};

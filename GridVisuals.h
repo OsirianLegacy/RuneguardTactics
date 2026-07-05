@@ -6,9 +6,9 @@
 #define RUNEGUARDTACTICS_GRIDVISUALS_H
 #include <map>
 #include "GridStructs.h"
-class gridvisuals {
+class GridVisuals {
 public:
-    explicit gridvisuals(int tilesize, int screenwidth, int screenheight);
+    explicit GridVisuals(int tilesize, int screenwidth, int screenheight);
     int tileSize = 16;
     int screenWidth;
     int screenHeight;

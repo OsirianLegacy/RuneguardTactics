@@ -21,5 +21,7 @@ add_executable(RuneguardTactics RuneguardTactics.cpp
         gridvisuals.cpp
         gridvisuals.h
         renderer.cpp
-        renderer.h)
+        renderer.h
+        InputManager_Combat.cpp
+        InputManager_Combat.h)
 target_link_libraries(RuneguardTactics PRIVATE raylib)

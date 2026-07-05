@@ -1,16 +1,18 @@
 #include <iostream>
-#include "debugtools.h"
-#include "gridlogic.h"
-#include "gridvisuals.h"
-#include "renderer.h"
+#include "Debugtools.h"
+#include "GridLogic.h"
+#include "GridVisuals.h"
+#include "Renderer.h"
 #include <raylib.h>
+#include "InputManager_Combat.h"
 using namespace debugtools;
 
-gridlogic grid(16,16);
-renderer renderer(1024, 768);
+GridLogic grid(16,16);
+Renderer renderer(1024, 768);
+InputManager_Combat input(renderer);
 int width = renderer.width;
 int height = renderer.height;
-gridvisuals visuals(32, width, height);
+GridVisuals visuals(32, width, height);
 int main()
 {
     int width = renderer.width;
@@ -18,6 +20,7 @@ int main()
     grid.generategrid(false);
     renderer.gridlogic = &grid;
     renderer.gridvisuals = &visuals;
+
     InitWindow(width, height, "Rune Guard Tactics");
 
     while (!WindowShouldClose()) {

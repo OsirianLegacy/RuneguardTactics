@@ -1,13 +1,13 @@
-﻿#include "gridlogic.h"
+﻿#include "GridLogic.h"
 #include <iostream>
 using namespace std;
-gridlogic::gridlogic(const int width, const int height)
+GridLogic::GridLogic(const int width, const int height)
 {
-    gridlogic::gridwidth = width;
-    gridlogic::gridheight = height;
+    GridLogic::gridwidth = width;
+    GridLogic::gridheight = height;
 }
 
-std::map<coord, cell> gridlogic::generategrid(bool debuggrid){
+std::map<coord, cell> GridLogic::generategrid(bool debuggrid){
     cout << "------ Generating Grid ------\n";
     for (int x = 0; x < gridwidth; ++x) {
         for (int y = 0; y < gridheight; ++y) {
@@ -26,7 +26,7 @@ std::map<coord, cell> gridlogic::generategrid(bool debuggrid){
     return map<coord, cell>{};
 }
 
-void gridlogic::debug()
+void GridLogic::debug()
 {
     for (const auto& [coord, cell] : gridmap)
     {

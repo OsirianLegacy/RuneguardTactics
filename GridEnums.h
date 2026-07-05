@@ -27,7 +27,7 @@ inline std::string toString(const celltype type) {
     return "Unknown";
 };
 
-// used in gridlogic map to map a neighbor to a specific cell lookup
+// used in GridLogic map to map a neighbor to a specific cell lookup
 enum class direction : std::uint8_t
 {
     north,
