@@ -18,6 +18,7 @@ struct cell
 {
     coord coordinates = {0,0};
     bool walkable = false;
+    bool occupied = false;
     int cost = 1;
     enum celltype type = celltype::empty;
 };

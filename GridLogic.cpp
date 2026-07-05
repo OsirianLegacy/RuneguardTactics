@@ -78,6 +78,65 @@ std::vector<coord> GridLogic::bfs(coord start, int depth, bool diagonals) const
     return reachable;
 }
 
+std::vector<coord> GridLogic::getCellsInMovementRange(coord start, int movementRange, bool diagonals) const
+{
+    std::vector<coord> reachable;
+
+    if (!gridmap.contains(start))
+    {
+        return reachable;
+    }
+
+    std::queue<coord> frontier;
+    std::set<coord> visited;
+    std::map<coord, int> distance;
+
+    frontier.push(start);
+    visited.insert(start);
+    distance[start] = 0;
+
+    while (!frontier.empty())
+    {
+        coord current = frontier.front();
+        frontier.pop();
+
+        reachable.push_back(current);
+
+        for (coord neighbor : getCellNeighbors(current, diagonals))
+        {
+            if (visited.contains(neighbor))
+            {
+                continue;
+            }
+
+            const cell& neighborCell = gridmap.at(neighbor);
+
+            if (!neighborCell.walkable)
+            {
+                continue;
+            }
+
+            if (neighborCell.occupied)
+            {
+                continue;
+            }
+
+            const int newDistance = distance[current] + neighborCell.cost;
+
+            if (newDistance > movementRange)
+            {
+                continue;
+            }
+
+            visited.insert(neighbor);
+            distance[neighbor] = newDistance;
+            frontier.push(neighbor);
+        }
+    }
+
+    return reachable;
+}
+
 std::vector<coord> GridLogic::getCellNeighbors(coord coordinate, bool diagonals) const
 {
     std::vector<coord> neighbors = {};
@@ -130,6 +189,7 @@ void GridLogic::debug()
     {
         cout << "coordinates: " << coord.x << "," << coord.y << "\n"
              << "walkable: " << cell.walkable << "\n"
+             << "occupied: " << cell.occupied << "\n"
              << "cost: " << cell.cost << "\n"
              << "type: " << toString(cell.type) << "\n";
     }

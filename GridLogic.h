@@ -11,6 +11,7 @@ public:
     std::map<coord, cell> gridmap ={};
     void generategrid(bool debuggrid);
     std::vector<coord> bfs(coord start, int depth, bool diagonals) const;
+    std::vector<coord> getCellsInMovementRange(coord start, int movementRange, bool diagonals) const;
     std::vector<coord> getCellNeighbors(coord coord, bool diagonals) const;
     void debug();
     GridLogic(int width, int height);

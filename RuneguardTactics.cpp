@@ -43,7 +43,7 @@ int main()
             clickedCoords = cellClicked.coordinates;
             std::vector<coord> neighbors = grid.getCellNeighbors(clickedCoords, true);
             std::cout << clickedCoords.x << "," << clickedCoords.y << ":" << " has Neighbors: " << neighbors.size() << "\n";
-            visuals.setHighlightedCells(grid.bfs(clickedCoords, 5, false));
+            visuals.setHighlightedCells(grid.getCellsInMovementRange(clickedCoords, 5, false));
         };
 
         BeginDrawing();

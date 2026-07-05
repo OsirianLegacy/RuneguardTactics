@@ -27,7 +27,7 @@ public:
 private:
     cell previousCell;
     cell hoveredCell;
-    cell clickedCell = {{0,0}, false, 1, celltype::empty};
+    cell clickedCell = {{0,0}, false, false, 1, celltype::empty};
     void setHoveredCell();
     Renderer& renderer;
 };
