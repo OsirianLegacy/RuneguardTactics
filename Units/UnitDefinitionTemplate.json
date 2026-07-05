@@ -1,0 +1,13 @@
+﻿{
+  "UnitID": "knight",
+  "UnitName": "Knight",
+  "team": "PLAYER",
+  "movetype": "CARDINAL",
+  "health": 12,
+  "defense": 4,
+  "damage": 3,
+  "healing": 0,
+  "movement": 4,
+  "range": 1,
+  "isAI": false
+}

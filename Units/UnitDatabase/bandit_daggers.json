@@ -1,0 +1,14 @@
+﻿{
+  "UnitID": "bandit_daggers",
+  "UnitName": "Bandit Slicer",
+  "team": "ENEMY",
+  "movetype": "CARDINAL",
+  "health": 6,
+  "defense": 1,
+  "damage": 3,
+  "healing": 1,
+  "movement": 4,
+  "range": 1,
+  "speed": 2,
+  "isAI": true
+}
