@@ -17,5 +17,9 @@ add_executable(RuneguardTactics RuneguardTactics.cpp
         GridStructs.h
         gridlogic.h
         gridlogic.cpp
-        debugtools.h)
+        debugtools.h
+        gridvisuals.cpp
+        gridvisuals.h
+        renderer.cpp
+        renderer.h)
 target_link_libraries(RuneguardTactics PRIVATE raylib)
