@@ -1,9 +1,9 @@
 ﻿{
-  "UnitID": "bandit_daggers",
-  "UnitName": "Dusk Ferret Slicer",
+  "UnitID": "bandit_crossbow",
+  "UnitName": "Dusk Ferret Arbalest",
   "team": "ENEMY",
-  "movetype": "DIAGONAL",
-  "unitTexture": "Assets/Art/Units/SS_DuskFerret_Bandit_Daggers.png",
+  "movetype": "CARDINAL",
+  "unitTexture": "Assets/Art/Units/SS_DuskFerret_Bandit_Crossbow.png",
   "frameWidth": 18,
   "frameHeight": 18,
   "idleFrames": [0, 1, 2, 3],
@@ -17,6 +17,5 @@
   "movement": 4,
   "range": 1,
   "speed": 2,
-  "isAI": true,
-  ""
+  "isAI": true
 }

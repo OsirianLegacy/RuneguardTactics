@@ -3,11 +3,18 @@
   "UnitName": "Knight",
   "team": "PLAYER",
   "movetype": "CARDINAL",
+  "frameWidth": 18,
+  "frameHeight": 18,
+  "idleFrames": [0, 1, 2, 3],
+  "damagedFrames": [8, 9, 10, 11],
+  "healedFrames": [12, 13, 14, 15],
+  "highlightedFrames": [4, 5, 6, 7],
   "health": 12,
   "defense": 4,
   "damage": 3,
   "healing": 0,
   "movement": 4,
   "range": 1,
+  "speed": 1,
   "isAI": false
 }

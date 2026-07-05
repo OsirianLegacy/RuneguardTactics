@@ -25,6 +25,11 @@ add_executable(RuneguardTactics RuneguardTactics.cpp
         InputManager_Combat.cpp
         InputManager_Combat.h
         Colors.h
+        CombatStructs.h
+        CombatManager.h
+        CombatManager.cpp
+        Spawner.h
+        Spawner.cpp
         TiledStructs.h
         TiledMap.h
         TiledMap.cpp
@@ -51,6 +56,6 @@ add_executable(RuneguardTactics RuneguardTactics.cpp
         Units/Stats/Stats.h
         Units/Stats/Stats.cpp
         Units/Stats/UnitDefinition.h
-        Units/Stats/UnitDefinition.cpp
+        MissionStructs.h
 )
 target_link_libraries(RuneguardTactics PRIVATE raylib)

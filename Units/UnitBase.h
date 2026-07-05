@@ -11,11 +11,18 @@ public:
   std::string UnitName;
   TEAM team;
   MOVETYPE movetype;
+  UnitSpriteSheet spriteSheet;
   stats stats;
   bool isAI;
 
   UnitBase(UnitDefinition def)
-    : UnitID(def.UnitID), UnitName(def.UnitName), team(def.team), movetype(def.movetype), stats(def), isAI(def.isAI)
+    : UnitID(def.UnitID),
+      UnitName(def.UnitName),
+      team(def.team),
+      movetype(def.movetype),
+      spriteSheet(def.spriteSheet),
+      stats(def),
+      isAI(def.isAI)
   {}
   void debug_unit();
 };

@@ -3,6 +3,7 @@
 #include <cctype>
 #include <fstream>
 #include <iostream>
+#include <optional>
 #include <sstream>
 #include <string>
 
@@ -138,6 +139,175 @@ namespace
         return text.substr(firstQuote + 1, secondQuote - firstQuote - 1);
     }
 
+    size_t findTopLevelJsonKey(const std::string& text, const std::string& key)
+    {
+        const std::string quotedKey = "\"" + key + "\"";
+        int depth = 0;
+        bool inString = false;
+        bool escaped = false;
+
+        for (size_t i = 0; i < text.size(); i++)
+        {
+            const char current = text[i];
+
+            if (inString)
+            {
+                if (escaped)
+                {
+                    escaped = false;
+                }
+                else if (current == '\\')
+                {
+                    escaped = true;
+                }
+                else if (current == '"')
+                {
+                    inString = false;
+                }
+
+                continue;
+            }
+
+            if (current == '"')
+            {
+                if (depth == 1 && text.compare(i, quotedKey.size(), quotedKey) == 0)
+                {
+                    return i;
+                }
+
+                inString = true;
+            }
+            else if (current == '{' || current == '[')
+            {
+                depth++;
+            }
+            else if (current == '}' || current == ']')
+            {
+                depth--;
+            }
+        }
+
+        return std::string::npos;
+    }
+
+    size_t findJsonValueStart(const std::string& text, const std::string& key)
+    {
+        const size_t keyPosition = findTopLevelJsonKey(text, key);
+
+        if (keyPosition == std::string::npos)
+        {
+            return std::string::npos;
+        }
+
+        const size_t colonPosition = text.find(':', keyPosition);
+
+        if (colonPosition == std::string::npos)
+        {
+            return std::string::npos;
+        }
+
+        size_t valuePosition = colonPosition + 1;
+
+        while (valuePosition < text.size() && std::isspace(static_cast<unsigned char>(text[valuePosition])))
+        {
+            valuePosition++;
+        }
+
+        return valuePosition;
+    }
+
+    std::string readTopLevelStringProperty(const std::string& text, const std::string& key)
+    {
+        const size_t valuePosition = findJsonValueStart(text, key);
+
+        if (valuePosition == std::string::npos || valuePosition >= text.size() || text[valuePosition] != '"')
+        {
+            return {};
+        }
+
+        const size_t valueEnd = text.find('"', valuePosition + 1);
+
+        if (valueEnd == std::string::npos)
+        {
+            return {};
+        }
+
+        return text.substr(valuePosition + 1, valueEnd - valuePosition - 1);
+    }
+
+    std::string readTopLevelValueAsString(const std::string& text, const std::string& key)
+    {
+        const size_t valuePosition = findJsonValueStart(text, key);
+
+        if (valuePosition == std::string::npos || valuePosition >= text.size())
+        {
+            return {};
+        }
+
+        if (text[valuePosition] == '"')
+        {
+            const size_t valueEnd = text.find('"', valuePosition + 1);
+
+            if (valueEnd == std::string::npos)
+            {
+                return {};
+            }
+
+            return text.substr(valuePosition + 1, valueEnd - valuePosition - 1);
+        }
+
+        size_t valueEnd = valuePosition;
+
+        while (valueEnd < text.size() && text[valueEnd] != ',' && text[valueEnd] != '}')
+        {
+            valueEnd++;
+        }
+
+        std::string value = text.substr(valuePosition, valueEnd - valuePosition);
+        while (!value.empty() && std::isspace(static_cast<unsigned char>(value.back())))
+        {
+            value.pop_back();
+        }
+
+        return value;
+    }
+
+    int readTopLevelIntProperty(const std::string& text, const std::string& key, int fallback = 0)
+    {
+        const size_t valuePosition = findJsonValueStart(text, key);
+
+        if (valuePosition == std::string::npos)
+        {
+            return fallback;
+        }
+
+        return std::stoi(text.substr(valuePosition));
+    }
+
+    float readTopLevelFloatProperty(const std::string& text, const std::string& key, float fallback = 0.0f)
+    {
+        const size_t valuePosition = findJsonValueStart(text, key);
+
+        if (valuePosition == std::string::npos)
+        {
+            return fallback;
+        }
+
+        return std::stof(text.substr(valuePosition));
+    }
+
+    bool readTopLevelBoolProperty(const std::string& text, const std::string& key, bool fallback = false)
+    {
+        const size_t valuePosition = findJsonValueStart(text, key);
+
+        if (valuePosition == std::string::npos)
+        {
+            return fallback;
+        }
+
+        return text.compare(valuePosition, 4, "true") == 0;
+    }
+
     std::string readXmlAttribute(const std::string& text, const std::string& key)
     {
         const std::string attributeKey = key + "=\"";
@@ -188,6 +358,48 @@ namespace
         }
 
         return values;
+    }
+
+    std::vector<std::string> readTopLevelObjectArray(const std::string& text, const std::string& key)
+    {
+        std::vector<std::string> objects;
+        const size_t valuePosition = findJsonValueStart(text, key);
+
+        if (valuePosition == std::string::npos || valuePosition >= text.size() || text[valuePosition] != '[')
+        {
+            return objects;
+        }
+
+        const size_t closeBracket = findMatchingBracket(text, valuePosition);
+
+        if (closeBracket == std::string::npos)
+        {
+            return objects;
+        }
+
+        size_t searchPosition = valuePosition + 1;
+
+        while (searchPosition < closeBracket)
+        {
+            const size_t objectOpenBrace = text.find('{', searchPosition);
+
+            if (objectOpenBrace == std::string::npos || objectOpenBrace > closeBracket)
+            {
+                break;
+            }
+
+            const size_t objectCloseBrace = findMatchingBrace(text, objectOpenBrace);
+
+            if (objectCloseBrace == std::string::npos)
+            {
+                break;
+            }
+
+            objects.push_back(text.substr(objectOpenBrace, objectCloseBrace - objectOpenBrace + 1));
+            searchPosition = objectCloseBrace + 1;
+        }
+
+        return objects;
     }
 
     int clearTiledFlipFlags(int tileId)
@@ -335,6 +547,108 @@ namespace
         return properties;
     }
 
+    TiledObjectProperty readTiledObjectProperty(const std::string& propertyText)
+    {
+        TiledObjectProperty property;
+        property.name = readTopLevelStringProperty(propertyText, "name");
+        property.type = readTopLevelStringProperty(propertyText, "type");
+        property.propertyType = readTopLevelStringProperty(propertyText, "propertytype");
+        property.value = readTopLevelValueAsString(propertyText, "value");
+        return property;
+    }
+
+    TiledObject readTiledObject(const std::string& objectText)
+    {
+        TiledObject object;
+        object.id = readTopLevelIntProperty(objectText, "id");
+        object.name = readTopLevelStringProperty(objectText, "name");
+        object.type = readTopLevelStringProperty(objectText, "type");
+        object.className = readTopLevelStringProperty(objectText, "class");
+        object.x = readTopLevelFloatProperty(objectText, "x");
+        object.y = readTopLevelFloatProperty(objectText, "y");
+        object.width = readTopLevelFloatProperty(objectText, "width");
+        object.height = readTopLevelFloatProperty(objectText, "height");
+        object.visible = readTopLevelBoolProperty(objectText, "visible", true);
+
+        for (const std::string& propertyText : readTopLevelObjectArray(objectText, "properties"))
+        {
+            object.properties.push_back(readTiledObjectProperty(propertyText));
+        }
+
+        return object;
+    }
+
+    TiledObjectLayer readTiledObjectLayer(const std::string& layerText)
+    {
+        TiledObjectLayer layer;
+        layer.name = readTopLevelStringProperty(layerText, "name");
+        layer.type = readTopLevelStringProperty(layerText, "type");
+        layer.className = readTopLevelStringProperty(layerText, "class");
+        layer.visible = readTopLevelBoolProperty(layerText, "visible", true);
+
+        for (const std::string& objectText : readTopLevelObjectArray(layerText, "objects"))
+        {
+            layer.objects.push_back(readTiledObject(objectText));
+        }
+
+        return layer;
+    }
+
+    std::string getObjectPropertyValue(const TiledObject& object, const std::string& propertyName)
+    {
+        for (const TiledObjectProperty& property : object.properties)
+        {
+            if (property.name == propertyName)
+            {
+                return property.value;
+            }
+        }
+
+        return {};
+    }
+
+    coord getObjectGridCoordinate(const TiledObject& object, const int tileWidth, const int tileHeight)
+    {
+        return coord{
+            static_cast<int>((object.x + static_cast<float>(tileWidth) / 2.0f) / static_cast<float>(tileWidth)),
+            static_cast<int>((object.y + static_cast<float>(tileHeight) / 2.0f) / static_cast<float>(tileHeight))
+        };
+    }
+
+    std::optional<TEAM> teamFromString(const std::string& value)
+    {
+        if (value == "PLAYER")
+        {
+            return PLAYER;
+        }
+
+        if (value == "ENEMY")
+        {
+            return ENEMY;
+        }
+
+        if (value == "CIVILIAN")
+        {
+            return CIVILIAN;
+        }
+
+        if (value == "NEUTRAL")
+        {
+            return NEUTRAL;
+        }
+
+        return std::nullopt;
+    }
+
+    void logInvalidSpawnMarker(
+        const std::string& layerName,
+        const TiledObject& object,
+        const std::string& reason)
+    {
+        std::cout << "Skipping invalid spawn marker on layer '" << layerName
+            << "' object id " << object.id << ": " << reason << "\n";
+    }
+
     bool hasAnyProperty(const TiledTileProperties& properties)
     {
         return properties.isObject || properties.hasWalkable || properties.hasCost || properties.hasCellType;
@@ -420,6 +734,7 @@ bool TiledMap::loadFromJson(const std::string& mapPath)
     width = readIntProperty(mapText, "width", mapText.rfind("\"version\""));
 
     layers.clear();
+    objectLayers.clear();
     tileProperties.clear();
 
     const size_t layersKey = mapText.find("\"layers\"");
@@ -455,15 +770,21 @@ bool TiledMap::loadFromJson(const std::string& mapPath)
         const std::string layerText =
             mapText.substr(layerOpenBrace, layerCloseBrace - layerOpenBrace + 1);
 
-        if (readStringProperty(layerText, "type") == "tilelayer")
+        const std::string layerType = readTopLevelStringProperty(layerText, "type");
+
+        if (layerType == "tilelayer")
         {
             TiledLayer layer;
-            layer.name = readStringProperty(layerText, "name");
-            layer.width = readIntProperty(layerText, "width");
-            layer.height = readIntProperty(layerText, "height");
-            layer.visible = readBoolProperty(layerText, "visible", true);
+            layer.name = readTopLevelStringProperty(layerText, "name");
+            layer.width = readTopLevelIntProperty(layerText, "width");
+            layer.height = readTopLevelIntProperty(layerText, "height");
+            layer.visible = readTopLevelBoolProperty(layerText, "visible", true);
             layer.data = readIntArrayProperty(layerText, "data");
             layers.push_back(layer);
+        }
+        else if (layerType == "objectgroup")
+        {
+            objectLayers.push_back(readTiledObjectLayer(layerText));
         }
 
         searchPosition = layerCloseBrace + 1;
@@ -621,6 +942,102 @@ const TiledLayer* TiledMap::getLayerByName(const std::string& layerName) const
     }
 
     return nullptr;
+}
+
+const TiledObjectLayer* TiledMap::getObjectLayerByName(const std::string& layerName) const
+{
+    for (const TiledObjectLayer& layer : objectLayers)
+    {
+        if (layer.name == layerName)
+        {
+            return &layer;
+        }
+    }
+
+    return nullptr;
+}
+
+std::vector<DeploymentSlot> TiledMap::getDeploymentSlots(const std::string& layerName) const
+{
+    std::vector<DeploymentSlot> deploymentSlots;
+    const TiledObjectLayer* layer = getObjectLayerByName(layerName);
+
+    if (layer == nullptr)
+    {
+        return deploymentSlots;
+    }
+
+    for (const TiledObject& object : layer->objects)
+    {
+        const std::string spawnType = getObjectPropertyValue(object, "spawnType");
+
+        if (spawnType.empty() || spawnType != "PlayerDeploymentSlot")
+        {
+            continue;
+        }
+
+        const std::string spawnId = getObjectPropertyValue(object, "spawnId");
+
+        if (spawnId.empty())
+        {
+            logInvalidSpawnMarker(layerName, object, "missing spawnId");
+            continue;
+        }
+
+        deploymentSlots.push_back(DeploymentSlot{spawnId, getObjectGridCoordinate(object, tileWidth, tileHeight)});
+    }
+
+    return deploymentSlots;
+}
+
+std::vector<EncounterSpawn> TiledMap::getEncounterSpawns(const std::string& layerName) const
+{
+    std::vector<EncounterSpawn> encounterSpawns;
+    const TiledObjectLayer* layer = getObjectLayerByName(layerName);
+
+    if (layer == nullptr)
+    {
+        return encounterSpawns;
+    }
+
+    for (const TiledObject& object : layer->objects)
+    {
+        const std::string spawnType = getObjectPropertyValue(object, "spawnType");
+
+        if (spawnType.empty() || spawnType != "EncounterSpawn")
+        {
+            continue;
+        }
+
+        const std::string spawnId = getObjectPropertyValue(object, "spawnId");
+        const std::string unitId = getObjectPropertyValue(object, "unitId");
+        const std::string teamValue = getObjectPropertyValue(object, "team");
+
+        if (spawnId.empty())
+        {
+            logInvalidSpawnMarker(layerName, object, "missing spawnId");
+            continue;
+        }
+
+        if (unitId.empty())
+        {
+            logInvalidSpawnMarker(layerName, object, "missing unitId");
+            continue;
+        }
+
+        const std::optional<TEAM> team = teamFromString(teamValue);
+
+        if (!team.has_value())
+        {
+            logInvalidSpawnMarker(layerName, object, "missing or unknown team '" + teamValue + "'");
+            continue;
+        }
+
+        encounterSpawns.push_back(
+            EncounterSpawn{spawnId, unitId, getObjectGridCoordinate(object, tileWidth, tileHeight), team.value()});
+    }
+
+    return encounterSpawns;
 }
 
 void TiledMap::draw(int startX, int startY) const

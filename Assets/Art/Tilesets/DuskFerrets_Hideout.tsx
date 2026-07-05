@@ -260,16 +260,16 @@
  </tile>
  <tile id="39" type="Cell">
   <properties>
-   <property name="celltype" propertytype="celltype" value="ground"/>
+   <property name="celltype" propertytype="celltype" value="empty"/>
    <property name="cost" type="int" value="1"/>
-   <property name="walkable" type="bool" value="true"/>
+   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="40" type="Cell">
   <properties>
-   <property name="celltype" propertytype="celltype" value="ground"/>
+   <property name="celltype" propertytype="celltype" value="empty"/>
    <property name="cost" type="int" value="1"/>
-   <property name="walkable" type="bool" value="true"/>
+   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="41" type="Cell">

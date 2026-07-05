@@ -1,4 +1,5 @@
 #include <iostream>
+#include "CombatManager.h"
 #include "Debugtools.h"
 #include "GridLogic.h"
 #include "GridVisuals.h"
@@ -15,26 +16,56 @@ int height = renderer.height;
 GridVisuals visuals(32, width, height);
 InputManager_Combat input(renderer);
 coord clickedCoords = {0,0};
-TiledMap GameMap;
+// Temporary to test Mission Loads working
+MissionData createDuskFerretsMission()
+{
+    MissionData mission;
+    mission.missionId = "dusk_ferrets";
+    mission.missionName = "Dusk Ferrets";
+    mission.missionDescription = "Clear the Dusk Ferrets hideout entrance.";
+
+    EncounterData entranceEncounter;
+    entranceEncounter.encounterId = "dusk_ferrets_hideout_entrance";
+    entranceEncounter.mapData.mapId = "dusk_ferrets_hideout_entrance";
+    entranceEncounter.mapData.mapJsonPath = "Assets/Maps/DuskFerrets_Hideout_Entrance.json";
+    entranceEncounter.mapData.tilesetPath = "Assets/Art/Tilesets/DuskFerrets_Hideout.tsx";
+    entranceEncounter.mapData.tilesetTexturePath = "Assets/Art/Tilesets/DuskFerrets_Hideout_Entrance.png";
+    entranceEncounter.mapData.walkableLayerName = "Ground";
+    entranceEncounter.mapData.blockedLayerName = "Walls";
+    entranceEncounter.mapData.objectLayerName = "Objects";
+
+    mission.encounters.push_back(entranceEncounter);
+    return mission;
+}
+
 int main()
 {
     int width = renderer.width;
     int height = renderer.height;
-    grid.generategrid(false);
     renderer.gridlogic = &grid;
     renderer.gridvisuals = &visuals;
     renderer.inputmanager = &input;
-    visuals.gridLayout = renderer.getGridLayout();
-    GameMap.loadFromJson("Assets/Maps/DuskFerrets_Hideout_Entrance.json");
-    GameMap.loadTilesetFromTsx("Assets/Art/Tilesets/DuskFerrets_Hideout.tsx");
-    GameMap.initializeGrid(grid, "Walls");
-    renderer.tiledMap = &GameMap;
     visuals.highlightColor = GameColors::AttackRange;
+
     // Game Loop starts here, load textures here before using.
     InitWindow(width, height, "Rune Guard Tactics");
     visuals.loadTextures();
-    GameMap.loadTilesetTexture("Assets/Art/Tilesets/DuskFerrets_Hideout_Entrance.png");
+
+    CombatManager combatManager(grid);
+    MissionData mission = createDuskFerretsMission();
+
+    if (!combatManager.startMissionEncounter(mission, "dusk_ferrets_hideout_entrance"))
+    {
+        CloseWindow();
+        return 1;
+    }
+
+    renderer.tiledMap = &combatManager.getCurrentMap();
+    renderer.setActiveUnits(&combatManager.getActiveUnits());
+    visuals.gridLayout = renderer.getGridLayout();
+
     while (!WindowShouldClose()) {
+        combatManager.update(GetFrameTime());
         input.update();
         input.resolveLeftClick();
         if (InputManager_Combat::wasLeftClicked() && input.isMouseInGrid())
@@ -54,10 +85,9 @@ int main()
         EndDrawing();
     }
     visuals.unloadTextures();
-    GameMap.unloadTextures();
+    combatManager.getCurrentMap().unloadTextures();
     CloseWindow();
     return 0;
 }
-
 
 

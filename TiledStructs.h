@@ -17,6 +17,37 @@ struct TiledLayer
     std::vector<int> data;
 };
 
+struct TiledObjectProperty
+{
+    std::string name;
+    std::string type;
+    std::string propertyType;
+    std::string value;
+};
+
+struct TiledObject
+{
+    int id = 0;
+    std::string name;
+    std::string type;
+    std::string className;
+    float x = 0.0f;
+    float y = 0.0f;
+    float width = 0.0f;
+    float height = 0.0f;
+    bool visible = true;
+    std::vector<TiledObjectProperty> properties;
+};
+
+struct TiledObjectLayer
+{
+    std::string name;
+    std::string type;
+    std::string className;
+    bool visible = true;
+    std::vector<TiledObject> objects;
+};
+
 struct TiledTileset
 {
     int firstGid = 1;
