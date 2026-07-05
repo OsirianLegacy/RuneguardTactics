@@ -12,7 +12,10 @@ public:
     int tileSize = 16;
     int screenWidth;
     int screenHeight;
-    void updatevisuals(const std::map<coord, cell>& gridmap, int startX, int startY) const;
+    gridlayout gridLayout;
+    void updateVisuals(const std::map<coord, cell>& gridmap, int startX, int startY) const;
+
+    void drawHoveredCell(cell hoveredcell);
 };
 
 

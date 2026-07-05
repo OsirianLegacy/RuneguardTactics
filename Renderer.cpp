@@ -7,6 +7,9 @@
 #include "GridVisuals.h"
 #include "GridLogic.h"
 #include <map>
+
+#include "InputManager_Combat.h"
+
 Renderer::Renderer(int width, int height) {
  this->width = width;
  this->height = height;
@@ -18,7 +21,9 @@ void Renderer::render() const {
  int gridPixelHeight = gridlogic->gridheight * gridvisuals->tileSize;
  int startX = (width - gridPixelWidth) /2;
  int startY = (height - gridPixelHeight) /2;
- gridvisuals->updatevisuals(gridmap, startX, startY);
+ gridvisuals->updateVisuals(gridmap, startX, startY);
+ auto hoveredcell = this->inputmanager->getHoveredCell();
+ gridvisuals->drawHoveredCell(hoveredcell);
 };
 
 gridlayout Renderer::getGridLayout() const

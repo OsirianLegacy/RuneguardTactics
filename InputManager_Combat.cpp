@@ -64,6 +64,11 @@ bool InputManager_Combat::isMouseInGrid()
     return mouseInGrid;
 }
 
+void InputManager_Combat::update() {
+    this->setHoveredCell();
+}
+
+
 bool InputManager_Combat::wasLeftClicked() {
     return IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }
