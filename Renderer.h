@@ -6,7 +6,8 @@
 #define RUNEGUARDTACTICS_RENDERER_H
 #include "GridVisuals.h"
 #include "GridLogic.h"
-#include "InputManager_Combat.h"
+
+class InputManager_Combat;
 
 class Renderer {
 public:

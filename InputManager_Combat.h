@@ -5,8 +5,10 @@
 #ifndef RUNEGUARDTACTICS_INPUTMANAGER_H
 #define RUNEGUARDTACTICS_INPUTMANAGER_H
 #include <raylib.h>
-#include "Renderer.h"
 #include "GridStructs.h"
+
+class Renderer;
+
 class InputManager_Combat {
 public:
     explicit InputManager_Combat(Renderer& inputrenderer);
@@ -16,6 +18,7 @@ public:
     [[nodiscard]] static bool wasLeftClicked();
     [[nodiscard]] static bool wasRightClicked();
     [[nodiscard]] static bool wasSpacePressed();
+    void update();
 
 private:
     cell previousCell;
