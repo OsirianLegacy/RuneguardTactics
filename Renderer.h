@@ -13,6 +13,7 @@ class TiledMap;
 class Renderer {
 public:
     TiledMap* tiledMap = nullptr;
+    float renderScale = 1.75f;
     Renderer(int width, int height);
     void render() const;
     [[nodiscard]] gridlayout getGridLayout() const;

@@ -21,6 +21,15 @@ void GridVisuals::updateVisuals(const std::map<coord, cell>& gridmap, int startX
     }
 }
 
+void GridVisuals::updateVisuals(const std::map<coord, cell>& gridmap, const gridlayout& layout) const
+{
+    for (const auto& [coordinate,currentCell] : gridmap) {
+        const int screenX = layout.startX + coordinate.x * layout.tileSize;
+        const int screenY = layout.startY + coordinate.y * layout.tileSize;
+        DrawRectangleLines(screenX, screenY, layout.tileSize, layout.tileSize, GameColors::GridLine);
+    }
+}
+
 
 void GridVisuals::drawHoveredCell(cell hoveredcell)
 {
@@ -30,6 +39,28 @@ void GridVisuals::drawHoveredCell(cell hoveredcell)
     const int  screenX = startX + hoveredCell.coordinates.x * tileSize;
     const int  screenY = startY + hoveredCell.coordinates.y * tileSize;
     DrawTexture(hoverTexture, screenX, screenY, WHITE);
+}
+
+void GridVisuals::drawHoveredCell(cell hoveredcell, const gridlayout& layout) const
+{
+    const int screenX = layout.startX + hoveredcell.coordinates.x * layout.tileSize;
+    const int screenY = layout.startY + hoveredcell.coordinates.y * layout.tileSize;
+
+    Rectangle source = {
+        0.0f,
+        0.0f,
+        static_cast<float>(hoverTexture.width),
+        static_cast<float>(hoverTexture.height)
+    };
+
+    Rectangle dest = {
+        static_cast<float>(screenX),
+        static_cast<float>(screenY),
+        static_cast<float>(layout.tileSize),
+        static_cast<float>(layout.tileSize)
+    };
+
+    DrawTexturePro(hoverTexture, source, dest, Vector2{0, 0}, 0.0f, WHITE);
 }
 
 void GridVisuals::loadTextures()
@@ -55,5 +86,16 @@ void GridVisuals::drawHighlightedCells()
         int screenY = gridLayout.startY + coordinate.y * tileSize;
 
         DrawRectangle(screenX, screenY, tileSize, tileSize, highlightColor);
+    }
+}
+
+void GridVisuals::drawHighlightedCells(const gridlayout& layout) const
+{
+    for (coord coordinate : highlightedCells)
+    {
+        int screenX = layout.startX + coordinate.x * layout.tileSize;
+        int screenY = layout.startY + coordinate.y * layout.tileSize;
+
+        DrawRectangle(screenX, screenY, layout.tileSize, layout.tileSize, highlightColor);
     }
 }

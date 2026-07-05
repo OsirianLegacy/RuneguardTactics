@@ -28,5 +28,29 @@ add_executable(RuneguardTactics RuneguardTactics.cpp
         TiledStructs.h
         TiledMap.h
         TiledMap.cpp
+        Units/UnitBase.h
+        Units/UnitBase.cpp
+        Units/UnitFactory.h
+        Units/UnitFactory.cpp
+        Units/Stats/AP.h
+        Units/Stats/AP.cpp
+        Units/Stats/Damage.h
+        Units/Stats/Damage.cpp
+        Units/Stats/Defense.h
+        Units/Stats/Defense.cpp
+        Units/Stats/Healing.h
+        Units/Stats/Healing.cpp
+        Units/Stats/Health.h
+        Units/Stats/Health.cpp
+        Units/Stats/Movement.h
+        Units/Stats/Movement.cpp
+        Units/Stats/Range.h
+        Units/Stats/Range.cpp
+        Units/Stats/speed.h
+        Units/Stats/speed.cpp
+        Units/Stats/Stats.h
+        Units/Stats/Stats.cpp
+        Units/Stats/UnitDefinition.h
+        Units/Stats/UnitDefinition.cpp
 )
 target_link_libraries(RuneguardTactics PRIVATE raylib)

@@ -21,13 +21,16 @@ public:
     std::vector<coord> highlightedCells;
     Color highlightColor = GameColors::MovementRange;
     void updateVisuals(const std::map<coord, cell>& gridmap, int startX, int startY) const;
+    void updateVisuals(const std::map<coord, cell>& gridmap, const gridlayout& layout) const;
     void setHighlightedCells(const std::vector<coord>& cells);
     void drawHighlightedCells();
+    void drawHighlightedCells(const gridlayout& layout) const;
     void setHighlightColor();
     Texture2D hoverTexture;
     void loadTextures();
     void unloadTextures() const;
     void drawHoveredCell(cell hoveredcell);
+    void drawHoveredCell(cell hoveredcell, const gridlayout& layout) const;
 };
 
 

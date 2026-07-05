@@ -29,6 +29,7 @@ struct TiledTileset
 
 struct TiledTileProperties
 {
+    bool isObject = false;
     bool hasWalkable = false;
     bool walkable = false;
     bool hasCost = false;
