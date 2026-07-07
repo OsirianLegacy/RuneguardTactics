@@ -9,7 +9,7 @@
 #include <array>
 #include <map>
 
-#include "InputManager_Combat.h"
+#include "InputManager.h"
 #include "TiledMap.h"
 
 Renderer::Renderer(int width, int height) {

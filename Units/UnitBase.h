@@ -24,5 +24,14 @@ public:
       stats(def),
       isAI(def.isAI)
   {}
+  // debugging functions
   void debug_unit();
+  // getter functions
+  struct stats getStats() const;
+  std::string getID() const;
+  std::string getName() const;
+  TEAM getTeam() const;
+  MOVETYPE getMovetype() const;
+  UnitSpriteSheet getSpriteSheet() const;
+  bool getIsAI() const;
 };

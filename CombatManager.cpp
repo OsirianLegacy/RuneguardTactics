@@ -11,9 +11,11 @@ CombatManager::CombatManager(
       grid(&grid)
 {
 }
-
+// Verifies all Encounter Data is valid, and reports back if anything is a nullptr or has invalid data
+// Sends console debug to assist with figuring out where issues are, fails at each necessary point.
 bool CombatManager::startMissionEncounter(const MissionData& mission, const std::string& encounterId)
 {
+    // CombatManager calls its function findEncounter passing through the mission & encounterId to locate and set its variables.
     const EncounterData* encounter = findEncounter(mission, encounterId);
 
     if (encounter == nullptr)
@@ -62,7 +64,7 @@ bool CombatManager::startMissionEncounter(const MissionData& mission, const std:
 
     return true;
 }
-
+// Handles animating Units based on their Sprite Sheet.
 void CombatManager::update(const float deltaTime)
 {
     if (deltaTime <= 0.0f)
@@ -112,7 +114,7 @@ const CombatState& CombatManager::getCombatState() const
 {
     return combatState;
 }
-
+// loops through a Missions Encounters and checks if one of those Encounters are its current EncounterID. If false, it returns nullptr
 const EncounterData* CombatManager::findEncounter(
     const MissionData& mission,
     const std::string& encounterId) const
@@ -124,6 +126,6 @@ const EncounterData* CombatManager::findEncounter(
             return &encounter;
         }
     }
-
+    std::cout << "EncounterID not found in combat state\n";
     return nullptr;
 }

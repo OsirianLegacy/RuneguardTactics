@@ -51,7 +51,7 @@ namespace
 
         return std::string::npos;
     }
-
+    // finds the matching ] for a specific [ already found, not necessarily the last ]. This is used to find the start and end of each individual layer.
     size_t findMatchingBracket(const std::string& text, size_t openBracket)
     {
         int depth = 0;
@@ -75,7 +75,9 @@ namespace
 
         return std::string::npos;
     }
-
+    // this function converts the grid itself into valid logic->gridmap coords and determines the following: cells map width, cells map height, cells tile size
+    // Calculation for Tileds flat-grid (1D Array) is tileIndex = y * layer.width + x; tileId = layer.data[tileIndex];
+    // When Read
     int readIntProperty(const std::string& text, const std::string& key, size_t start = 0)
     {
         const std::string quotedKey = "\"" + key + "\"";
@@ -717,7 +719,7 @@ namespace
         }
     }
 }
-
+// Combat Manager calls this function when loading an encounter's data to fetch the map data from Tiled.json file.
 bool TiledMap::loadFromJson(const std::string& mapPath)
 {
     const std::string mapText = readTextFile(mapPath);

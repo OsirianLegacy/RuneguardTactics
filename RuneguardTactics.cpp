@@ -5,8 +5,11 @@
 #include "GridVisuals.h"
 #include "Renderer.h"
 #include <raylib.h>
-#include "InputManager_Combat.h"
+#include "InputManager.h"
+#include "Missions.h"
 #include "TiledMap.h"
+#include "GameState.h"
+#include "GameUI.h"
 using namespace debugtools;
 
 GridLogic grid(16,16);
@@ -14,61 +17,33 @@ Renderer renderer(1600, 900);
 int width = renderer.width;
 int height = renderer.height;
 GridVisuals visuals(32, width, height);
-InputManager_Combat input(renderer);
+InputManager input(renderer);
 coord clickedCoords = {0,0};
-// Temporary to test Mission Loads working
-MissionData createDuskFerretsMission()
-{
-    MissionData mission;
-    mission.missionId = "dusk_ferrets";
-    mission.missionName = "Dusk Ferrets";
-    mission.missionDescription = "Clear the Dusk Ferrets hideout entrance.";
-
-    EncounterData entranceEncounter;
-    entranceEncounter.encounterId = "dusk_ferrets_hideout_entrance";
-    entranceEncounter.mapData.mapId = "dusk_ferrets_hideout_entrance";
-    entranceEncounter.mapData.mapJsonPath = "Assets/Maps/DuskFerrets_Hideout_Entrance.json";
-    entranceEncounter.mapData.tilesetPath = "Assets/Art/Tilesets/DuskFerrets_Hideout.tsx";
-    entranceEncounter.mapData.tilesetTexturePath = "Assets/Art/Tilesets/DuskFerrets_Hideout_Entrance.png";
-    entranceEncounter.mapData.walkableLayerName = "Ground";
-    entranceEncounter.mapData.blockedLayerName = "Walls";
-    entranceEncounter.mapData.objectLayerName = "Objects";
-
-    mission.encounters.push_back(entranceEncounter);
-    return mission;
-}
+GameState state;
+GameUI UI;
 
 int main()
 {
+    // pass through renderer variables prior to rendering
     int width = renderer.width;
     int height = renderer.height;
     renderer.gridlogic = &grid;
     renderer.gridvisuals = &visuals;
     renderer.inputmanager = &input;
     visuals.highlightColor = GameColors::AttackRange;
-
+    state.setGameState(gamestate::mainmenu);
+    input.setState(state.getGameState());
+    UI.UpdateUI(gamestate::mainmenu);
     // Game Loop starts here, load textures here before using.
     InitWindow(width, height, "Rune Guard Tactics");
     visuals.loadTextures();
+    MissionDatabase missionDatabase;
 
-    CombatManager combatManager(grid);
-    MissionData mission = createDuskFerretsMission();
-
-    if (!combatManager.startMissionEncounter(mission, "dusk_ferrets_hideout_entrance"))
-    {
-        CloseWindow();
-        return 1;
-    }
-
-    renderer.tiledMap = &combatManager.getCurrentMap();
-    renderer.setActiveUnits(&combatManager.getActiveUnits());
-    visuals.gridLayout = renderer.getGridLayout();
 
     while (!WindowShouldClose()) {
-        combatManager.update(GetFrameTime());
         input.update();
         input.resolveLeftClick();
-        if (InputManager_Combat::wasLeftClicked() && input.isMouseInGrid())
+        if (InputManager::wasLeftClicked() && input.isMouseInGrid())
         {
             cell cellClicked = input.getClickedCell();
             clickedCoords = cellClicked.coordinates;
@@ -80,14 +55,12 @@ int main()
         BeginDrawing();
         ClearBackground(BLACK);
         renderer.render();
+        UI.draw();
 
 
         EndDrawing();
     }
     visuals.unloadTextures();
-    combatManager.getCurrentMap().unloadTextures();
     CloseWindow();
     return 0;
 }
-
-

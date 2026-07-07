@@ -23,6 +23,10 @@ struct CombatUnit
     int animationFrame = 0;
     float animationTimer = 0.0f;
     float animationFramesPerSecond = 6.0f;
+
+   [[nodiscard]] stats GetRuntimeData() const {
+    return this->unit.stats;
+    }
 };
 
 struct CombatState

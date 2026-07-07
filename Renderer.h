@@ -10,7 +10,7 @@
 
 #include <vector>
 
-class InputManager_Combat;
+class InputManager;
 class TiledMap;
 
 class Renderer {
@@ -26,7 +26,7 @@ public:
     int height;
     GridVisuals *gridvisuals;
     GridLogic *gridlogic;
-    InputManager_Combat *inputmanager;
+    InputManager *inputmanager;
     const std::vector<CombatUnit>* activeUnits = nullptr;
 };
 

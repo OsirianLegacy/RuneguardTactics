@@ -14,3 +14,39 @@ void UnitBase::debug_unit()
     << "AP: " << this->stats.ap.get_current() << std::endl << std::endl;
 };
 
+struct stats UnitBase::getStats() const {
+    return this->stats;
+}
+
+std::string UnitBase::getID() const {
+    return this ->UnitID;
+}
+
+bool UnitBase::getIsAI() const {
+    return this->isAI;
+}
+
+MOVETYPE UnitBase::getMovetype() const {
+    return this->movetype;
+}
+
+std::string UnitBase::getName() const {
+    return this->UnitName;
+}
+
+UnitSpriteSheet UnitBase::getSpriteSheet() const {
+    return this->spriteSheet;
+}
+
+TEAM UnitBase::getTeam() const {
+    return this->team;
+}
+
+
+
+
+
+
+
+
+

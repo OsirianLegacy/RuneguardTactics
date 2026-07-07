@@ -182,7 +182,6 @@ std::vector<coord> GridLogic::getCellNeighbors(coord coordinate, bool diagonals)
     }
 }
 
-
 void GridLogic::debug()
 {
     for (const auto& [coord, cell] : gridmap)

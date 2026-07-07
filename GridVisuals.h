@@ -8,11 +8,13 @@
 #include "GridStructs.h"
 #include <vector>
 #include <raylib.h>
+#include "GameState.h"
 
 #include "Colors.h"
 
 class GridVisuals {
 public:
+    void setState(gamestate gamestate);
     explicit GridVisuals(int tilesize, int screenwidth, int screenheight);
     int tileSize = 16;
     int screenWidth;
@@ -29,8 +31,11 @@ public:
     Texture2D hoverTexture;
     void loadTextures();
     void unloadTextures() const;
-    void drawHoveredCell(cell hoveredcell);
+    void drawHoveredCell(cell hoveredcell) const;
     void drawHoveredCell(cell hoveredcell, const gridlayout& layout) const;
+
+private:
+    gamestate gameState;
 };
 
 

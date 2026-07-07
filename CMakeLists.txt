@@ -22,8 +22,8 @@ add_executable(RuneguardTactics RuneguardTactics.cpp
         gridvisuals.h
         renderer.cpp
         renderer.h
-        InputManager_Combat.cpp
-        InputManager_Combat.h
+        InputManager.cpp
+        InputManager.h
         Colors.h
         CombatStructs.h
         CombatManager.h
@@ -57,5 +57,16 @@ add_executable(RuneguardTactics RuneguardTactics.cpp
         Units/Stats/Stats.cpp
         Units/Stats/UnitDefinition.h
         MissionStructs.h
+        GameState.cpp
+        GameState.h
+        GameEnums.h
+        Roster.cpp
+        Roster.h
+        GameStructs.h
+        Missions.h
+        Missions.cpp
+        GameUI.cpp
+        GameUI.h
 )
+target_include_directories(RuneguardTactics PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty")
 target_link_libraries(RuneguardTactics PRIVATE raylib)

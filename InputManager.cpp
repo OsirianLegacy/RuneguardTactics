@@ -2,23 +2,28 @@
 // Created by Jkurt on 7/4/2026.
 //
 
-#include "InputManager_Combat.h"
+#include "InputManager.h"
 #include <raylib.h>
 #include "Renderer.h"
 #include "GridStructs.h"
 #include <iostream>
 
-InputManager_Combat::InputManager_Combat(Renderer& inputrenderer)
+InputManager::InputManager(Renderer& inputrenderer)
     : renderer(inputrenderer)
 {
 }
 
-Vector2 InputManager_Combat::getMousePosition()
+void InputManager::setState(gamestate gameState) {
+    this->gameState = gameState;
+}
+
+
+Vector2 InputManager::getMousePosition()
 {
     return GetMousePosition();
 }
 
-void InputManager_Combat::setHoveredCell()
+void InputManager::setHoveredCell()
 {
     auto mouse = getMousePosition();
     if (auto inWindow = isMouseInWindow() && (isMouseInGrid()))
@@ -37,13 +42,13 @@ void InputManager_Combat::setHoveredCell()
 }
 
 
-cell InputManager_Combat::getHoveredCell() const
+cell InputManager::getHoveredCell() const
 {
     return hoveredCell;
 }
 
 
-bool InputManager_Combat::isMouseInWindow()
+bool InputManager::isMouseInWindow()
 {
     Vector2 mousePosition = getMousePosition();
     bool mouseInWindow =
@@ -54,7 +59,7 @@ bool InputManager_Combat::isMouseInWindow()
     return mouseInWindow;
 }
 
-bool InputManager_Combat::isMouseInGrid()
+bool InputManager::isMouseInGrid()
 {
     auto mouse = getMousePosition();
     gridlayout gridLayout = renderer.getGridLayout();
@@ -66,18 +71,28 @@ bool InputManager_Combat::isMouseInGrid()
     return mouseInGrid;
 }
 
-void InputManager_Combat::update()
+void InputManager::update()
 {
-    this->setHoveredCell();
+    if (gameState == gamestate::mainmenu)
+    {
+
+    }
+
+    // If we're in Combat, we should be setting the hovered cell every tick.
+    if (gameState == gamestate::combat)
+    {
+        this->setHoveredCell();
+    }
+
 }
 
 
-bool InputManager_Combat::wasLeftClicked()
+bool InputManager::wasLeftClicked()
 {
     return IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }
 
-void InputManager_Combat::resolveLeftClick()
+void InputManager::resolveLeftClick()
 {
     if (isMouseInWindow() && isMouseInGrid())
     {
@@ -89,18 +104,18 @@ void InputManager_Combat::resolveLeftClick()
     }
 }
 
-cell InputManager_Combat::getClickedCell() const
+cell InputManager::getClickedCell() const
 {
     return clickedCell;
 }
 
 
-bool InputManager_Combat::wasRightClicked()
+bool InputManager::wasRightClicked()
 {
     return IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
 }
 
-bool InputManager_Combat::wasSpacePressed()
+bool InputManager::wasSpacePressed()
 {
     return IsKeyPressed(KEY_SPACE);
 }

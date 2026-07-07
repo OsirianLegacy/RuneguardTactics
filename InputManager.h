@@ -6,12 +6,14 @@
 #define RUNEGUARDTACTICS_INPUTMANAGER_H
 #include <raylib.h>
 #include "GridStructs.h"
+#include "GameState.h"
 
 class Renderer;
 
-class InputManager_Combat {
+class InputManager {
 public:
-    explicit InputManager_Combat(Renderer& inputrenderer);
+    void setState(gamestate gameState);
+    explicit InputManager(Renderer& inputrenderer);
     [[nodiscard]] static Vector2 getMousePosition() ;
     [[nodiscard]] cell getHoveredCell() const;
     [[nodiscard]] cell getClickedCell() const;
@@ -30,6 +32,7 @@ private:
     cell clickedCell = {{0,0}, false, false, 1, celltype::empty};
     void setHoveredCell();
     Renderer& renderer;
+    gamestate gameState = gamestate::mainmenu;
 };
 
 
