@@ -1,0 +1,26 @@
+[
+  {
+    "encounterId": "dusk_ferrets_hideout_entrance",
+    "mapData": {
+      "mapId": "dusk_ferrets_hideout_entrance",
+      "mapJsonPath": "Assets/Maps/DuskFerrets_Hideout_Entrance.json",
+      "tilesetPath": "Assets/Art/Tilesets/DuskFerrets_Hideout.tsx",
+      "tilesetTexturePath": "Assets/Art/Tilesets/DuskFerrets_Hideout_Entrance.png",
+      "walkableLayerName": "Ground",
+      "blockedLayerName": "Walls",
+      "objectLayerName": "Objects"
+    }
+  },
+  {
+    "encounterId": "dusk_ferrets_warehouse",
+    "mapData": {
+      "mapId": "dusk_ferrets_warehouse",
+      "mapJsonPath": "Assets/Maps/DuskFerrets_Warehouse.json",
+      "tilesetPath": "Assets/Art/Tilesets/DuskFerrets_Hideout.tsx",
+      "tilesetTexturePath": "Assets/Art/Tilesets/DuskFerrets_Hideout_Entrance.png",
+      "walkableLayerName": "Ground",
+      "blockedLayerName": "Walls",
+      "objectLayerName": "Objects"
+    }
+  }
+]

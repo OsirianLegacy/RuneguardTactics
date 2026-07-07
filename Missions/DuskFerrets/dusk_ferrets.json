@@ -1,0 +1,3 @@
+[
+  { "missionId": "dusk_ferrets", "missionName": "Dusk Ferrets", "missionDescription": "Clear the Dusk Ferrets hideout entrance.", "encounterIds": ["dusk_ferrets_hideout_entrance"] }
+]
