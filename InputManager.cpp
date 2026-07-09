@@ -7,14 +7,25 @@
 #include "Renderer.h"
 #include "GridStructs.h"
 #include <iostream>
-
 InputManager::InputManager(Renderer& inputrenderer)
     : renderer(inputrenderer)
 {
 }
 
-void InputManager::setState(gamestate gameState) {
-    this->gameState = gameState;
+void InputManager::setState(gamestate newGameState) {
+    setGameState(newGameState);
+}
+
+void InputManager::setGameState(gamestate newGameState) {
+    this->gameState = newGameState;
+}
+
+void InputManager::setGameEvent(gameevent newGameEvent) {
+    if (newGameEvent != currentGameEvent)
+    {
+        currentGameEvent = newGameEvent;
+        std::cout << "InputManager assigning new game event: " << toString(currentGameEvent) << "\n";
+    }
 }
 
 
@@ -25,9 +36,9 @@ Vector2 InputManager::getMousePosition()
 
 void InputManager::setHoveredCell()
 {
-    auto mouse = getMousePosition();
-    if (auto inWindow = isMouseInWindow() && (isMouseInGrid()))
+    if (auto inWindow = isMouseInWindow() && (isMouseInGrid() && gameState == gamestate::combat))
     {
+        auto mouse = getMousePosition();
         gridlayout gridLayout = renderer.getGridLayout();
         const int localMouseX = mouse.x - gridLayout.startX;
         const int localMouseY = mouse.y - gridLayout.startY;
@@ -75,7 +86,13 @@ void InputManager::update()
 {
     if (gameState == gamestate::mainmenu)
     {
+        if (isMouseInWindow())
+        {
+            if (wasLeftClicked())
+            {
 
+            }
+        }
     }
 
     // If we're in Combat, we should be setting the hovered cell every tick.
@@ -86,15 +103,23 @@ void InputManager::update()
 
 }
 
-
 bool InputManager::wasLeftClicked()
 {
     return IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }
 
+bool InputManager::isLeftMouseDown()
+{
+    return IsMouseButtonDown(MOUSE_BUTTON_LEFT);
+}
+
 void InputManager::resolveLeftClick()
 {
-    if (isMouseInWindow() && isMouseInGrid())
+    if (isMouseInWindow() && isMouseInGrid() && gameState == gamestate::mainmenu)
+    {
+
+    }
+    if (isMouseInWindow() && isMouseInGrid() && gameState == gamestate::combat)
     {
         if (bool leftclicked = wasLeftClicked())
         {
@@ -106,7 +131,7 @@ void InputManager::resolveLeftClick()
 
 cell InputManager::getClickedCell() const
 {
-    return clickedCell;
+        return clickedCell;
 }
 
 

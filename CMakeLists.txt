@@ -67,6 +67,10 @@ add_executable(RuneguardTactics RuneguardTactics.cpp
         Missions.cpp
         GameUI.cpp
         GameUI.h
+        GameEvents.cpp
+        GameEvents.h
+        MissionManager.cpp
+        MissionManager.h
 )
 target_include_directories(RuneguardTactics PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty")
 target_link_libraries(RuneguardTactics PRIVATE raylib)

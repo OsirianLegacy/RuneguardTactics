@@ -10,6 +10,7 @@
 #include "TiledMap.h"
 #include "GameState.h"
 #include "GameUI.h"
+#include "GameEvents.h"
 using namespace debugtools;
 
 GridLogic grid(16,16);
@@ -20,7 +21,7 @@ GridVisuals visuals(32, width, height);
 InputManager input(renderer);
 coord clickedCoords = {0,0};
 GameState state;
-GameUI UI;
+GameUI UI(renderer, input);
 
 int main()
 {
@@ -34,16 +35,27 @@ int main()
     state.setGameState(gamestate::mainmenu);
     input.setState(state.getGameState());
     UI.UpdateUI(gamestate::mainmenu);
-    // Game Loop starts here, load textures here before using.
+    UI.setGameEvent(gameevent::null);
+
+// ------Window hasn't opened yet, don't load textures before this point------ //
     InitWindow(width, height, "Rune Guard Tactics");
     visuals.loadTextures();
+    UI.loadTextures();
+    UI.loadFonts();
+    MissionManager missionManager;
     MissionDatabase missionDatabase;
-
-
+    CombatManager combatManager(grid);
+    GameEvents events{combatManager, state, input, UI, missionManager};
+    events.currentGameEvent = gameevent::null;
+// ------Game Loop starts here, load textures before this point------ //
     while (!WindowShouldClose()) {
+        events.checkGameEvent(UI.getGameEvent());
+        events.checkGameState(state.getGameState());
         input.update();
         input.resolveLeftClick();
-        if (InputManager::wasLeftClicked() && input.isMouseInGrid())
+
+        // Gate left click cell fetching unless game state is in combat.
+        if (InputManager::wasLeftClicked() && input.isMouseInGrid() && state.getGameState() == gamestate::combat)
         {
             cell cellClicked = input.getClickedCell();
             clickedCoords = cellClicked.coordinates;
@@ -56,7 +68,6 @@ int main()
         ClearBackground(BLACK);
         renderer.render();
         UI.draw();
-
 
         EndDrawing();
     }

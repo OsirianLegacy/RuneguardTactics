@@ -123,3 +123,25 @@ void GameState::setFullscreen(const bool fullscreen)
 {
     gameData.userSettings.fullscreen = fullscreen;
 }
+
+void GameState::setGameEvent(gameevent newGameEvent)
+{
+    if (currentGameEvent != newGameEvent)
+    {
+        currentGameEvent = newGameEvent;
+        std::cout << "Game State received new game event: " << toString(currentGameEvent) << "\n";
+
+        if (currentGameEvent == gameevent::newgame)
+        {
+            setGameState(gamestate::newgameunitselector);
+        }
+    }
+}
+
+GameState::GameState() {
+
+}
+
+
+
+

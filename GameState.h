@@ -6,9 +6,12 @@
 #define RUNEGUARDTACTICS_GAMESTATE_H
 
 #include "GameStructs.h"
-
 class GameState {
 public:
+    GameState();
+
+    void setGameEvent(gameevent newGameEvent);
+
     [[nodiscard]] const GameData& getGameData() const;
     void setGameData(const GameData& gameData);
 
@@ -47,6 +50,7 @@ public:
 
 private:
     GameData gameData;
+    gameevent currentGameEvent = gameevent::null;
 };
 
 

@@ -52,6 +52,7 @@ namespace GameColors
     constexpr Color AttackRange   = Palette::Red;
     constexpr Color SelectedCell  = Palette::Yellow;
     constexpr Color BlockedCell   = Palette::Red;
+    constexpr Color TitleFont     = Palette::DeepGray;
 }
 
 #endif //RUNEGUARDTACTICS_COLORS_H

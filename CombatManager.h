@@ -6,7 +6,7 @@
 #include "Spawner.h"
 #include "TiledMap.h"
 #include "Units/UnitFactory.h"
-
+#include "GameState.h"
 #include <filesystem>
 #include <string>
 #include <vector>
@@ -32,14 +32,16 @@ public:
     [[nodiscard]] const TiledMap& getCurrentMap() const;
     // used to retrieve the Combat State from the CombatManager, Safe.
     [[nodiscard]] const CombatState& getCombatState() const;
-
+    void setGameState(gamestate newGameState);
+    void setGameEvent(gameevent newGameEvent);
 private:
 
     const EncounterData* findEncounter(const MissionData& mission, const std::string& encounterId) const;
-
+    gamestate gameState;
     UnitFactory unitFactory;
     Spawner spawner;
     TiledMap currentMap;
     GridLogic* grid = nullptr;
     CombatState combatState;
+    gameevent currentGameEvent = gameevent::null;
 };

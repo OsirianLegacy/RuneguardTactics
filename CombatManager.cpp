@@ -11,6 +11,19 @@ CombatManager::CombatManager(
       grid(&grid)
 {
 }
+
+void CombatManager::setGameState(gamestate newGameState) {
+    this->gameState = newGameState;
+}
+
+void CombatManager::setGameEvent(gameevent newGameEvent) {
+    if (newGameEvent != currentGameEvent)
+    {
+        currentGameEvent = newGameEvent;
+        std::cout << "CombatManager assigning new game event: " << toString(currentGameEvent) << "\n";
+    }
+};
+
 // Verifies all Encounter Data is valid, and reports back if anything is a nullptr or has invalid data
 // Sends console debug to assist with figuring out where issues are, fails at each necessary point.
 bool CombatManager::startMissionEncounter(const MissionData& mission, const std::string& encounterId)
