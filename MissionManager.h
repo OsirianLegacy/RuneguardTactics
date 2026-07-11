@@ -4,7 +4,7 @@
 
 #ifndef RUNEGUARDTACTICS_MISSIONMANAGER_H
 #define RUNEGUARDTACTICS_MISSIONMANAGER_H
-#include "GameEnums.h"
+#include "Data/GameEnums.h"
 
 class MissionManager {
 public:

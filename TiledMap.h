@@ -1,8 +1,8 @@
 #pragma once
 
 #include "GridLogic.h"
-#include "MissionStructs.h"
-#include "TiledStructs.h"
+#include "Data/MissionStructs.h"
+#include "Data/TiledStructs.h"
 #include <map>
 #include <string>
 #include <vector>

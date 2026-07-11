@@ -4,7 +4,7 @@
 
 #ifndef RUNEGUARDTACTICS_RENDERER_H
 #define RUNEGUARDTACTICS_RENDERER_H
-#include "CombatStructs.h"
+#include "Data/CombatStructs.h"
 #include "GridVisuals.h"
 #include "GridLogic.h"
 

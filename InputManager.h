@@ -5,7 +5,7 @@
 #ifndef RUNEGUARDTACTICS_INPUTMANAGER_H
 #define RUNEGUARDTACTICS_INPUTMANAGER_H
 #include <raylib.h>
-#include "GridStructs.h"
+#include "Data/GridStructs.h"
 #include "GameState.h"
 
 class Renderer;

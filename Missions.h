@@ -5,7 +5,7 @@
 #ifndef RUNEGUARDTACTICS_MISSIONS_H
 #define RUNEGUARDTACTICS_MISSIONS_H
 
-#include "MissionStructs.h"
+#include "Data/MissionStructs.h"
 
 #include <filesystem>
 #include <string>

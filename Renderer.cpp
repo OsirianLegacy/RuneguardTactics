@@ -6,6 +6,7 @@
 #include <raylib.h>
 #include "GridVisuals.h"
 #include "GridLogic.h"
+#include <algorithm>
 #include <array>
 #include <map>
 
@@ -19,6 +20,9 @@ Renderer::Renderer(int width, int height) {
 
 namespace
 {
+ constexpr int BaseRenderWidth = 1600;
+ constexpr int BaseRenderHeight = 900;
+
  Color colorForTeam(const TEAM team)
  {
   switch (team)
@@ -90,8 +94,7 @@ void Renderer::render() const {
  // draw highlights above the map
  gridvisuals->drawHighlightedCells(layout);
  // draw the current hovered cell over highlights
- auto hoveredcell = this->inputmanager->getHoveredCell();
- gridvisuals->drawHoveredCell(hoveredcell, layout);
+
  // render units above the current hovered cell.
  if (activeUnits != nullptr)
  {
@@ -139,12 +142,18 @@ void Renderer::render() const {
 
  // draw grid outline last so it always shows the grid.
  gridvisuals->updateVisuals(gridmap, layout);
+ auto hoveredcell = this->inputmanager->getHoveredCell();
+ gridvisuals->drawHoveredCell(hoveredcell, layout);
 };
 
 gridlayout Renderer::getGridLayout() const
 {
  gridlayout gridLayout;
- int scaledTileSize = static_cast<int>(gridvisuals->tileSize * renderScale);
+ const int baseTileSize = static_cast<int>(gridvisuals->tileSize * renderScale);
+ const float resolutionScale = std::min(
+  static_cast<float>(width) / static_cast<float>(BaseRenderWidth),
+  static_cast<float>(height) / static_cast<float>(BaseRenderHeight));
+ int scaledTileSize = std::max(1, static_cast<int>(static_cast<float>(baseTileSize) * resolutionScale));
  int gridPixelWidth = gridlogic->gridwidth * scaledTileSize;
  int gridPixelHeight = gridlogic->gridheight * scaledTileSize;
  int startX = (width - gridPixelWidth) /2;

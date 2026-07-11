@@ -4,7 +4,7 @@
 
 #ifndef RUNEGUARDTACTICS_ROSTER_H
 #define RUNEGUARDTACTICS_ROSTER_H
-#include "CombatStructs.h"
+#include "Data/CombatStructs.h"
 #include <vector>
 class Roster {
 private:

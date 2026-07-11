@@ -1,8 +1,8 @@
 #pragma once
 
-#include "CombatStructs.h"
+#include "Data/CombatStructs.h"
 #include "GridLogic.h"
-#include "MissionStructs.h"
+#include "Data/MissionStructs.h"
 #include "Spawner.h"
 #include "TiledMap.h"
 #include "Units/UnitFactory.h"

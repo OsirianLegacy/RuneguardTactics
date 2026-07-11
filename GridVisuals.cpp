@@ -4,8 +4,8 @@
 #include <raylib.h>
 #include "GridVisuals.h"
 
-#include "Colors.h"
-#include "GridStructs.h"
+#include "Data/Colors.h"
+#include "Data/GridStructs.h"
 GridVisuals::GridVisuals(int tilesize, int screenwidth, int screenheight) {
     this->tileSize = tilesize;
     this->screenWidth = screenwidth;
@@ -74,6 +74,7 @@ void GridVisuals::drawHoveredCell(cell hoveredcell, const gridlayout& layout) co
 void GridVisuals::loadTextures()
 {
     hoverTexture = LoadTexture("Assets/Art/Grid/Hover.png");
+    SetTextureFilter(hoverTexture, TEXTURE_FILTER_POINT);
 }
 
 void GridVisuals::unloadTextures() const

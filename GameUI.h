@@ -5,10 +5,13 @@
 #ifndef RUNEGUARDTACTICS_GAMEUI_H
 #define RUNEGUARDTACTICS_GAMEUI_H
 
+#include <memory>
 #include <raylib.h>
 #include "GameState.h"
 #include "Renderer.h"
 #include "InputManager.h"
+#include "MainMenuUI.h"
+#include "UnitSelectorUI.h"
 
 class GameUI {
 
@@ -34,7 +37,7 @@ public:
     void loadFonts();
     void UpdateUI(gamestate gameState);
     void draw();
-    void update() const;
+    void update();
     void loadTextures();
     void setGameState(gamestate newGameState);
     void setGameEvent(gameevent newGameEvent);
@@ -45,17 +48,19 @@ private:
     Renderer& renderer;
     InputManager& inputManager;
 
+    // UI Screens
+    std::unique_ptr<MainMenuUI> mainMenuScreen;
+    std::unique_ptr<unitSelectorUI> unitSelectorScreen;
+
     //UI Variables
+    void createScreens();
     UIAnchors getAnchors() const;
     UIAnchors anchors = getAnchors();
 
-    // Main Menu UI
-    Texture2D buttonNewGameTexture = {};
-    Texture2D buttonNewGameHoveredTexture = {};
-    Texture2D buttonNewGameClickedTexture = {};
-    Texture2D buttonContinueGameTexture = {};
-    Texture2D buttonContinueGameHoveredTexture = {};
-    Texture2D buttonContinueGameClickedTexture = {};
+    // Shared UI Textures
+    Texture2D buttonIdleTexture = {};
+    Texture2D buttonHoveredTexture = {};
+    Texture2D buttonClickedTexture = {};
     Texture2D titleScreenTexture = {};
 
     // New Game Unit Creation UI
@@ -67,26 +72,6 @@ private:
 
     // Non-UI Variables
     gameevent nextGameEvent = gameevent::null;
-
-    const Vector2 center {
-        renderer.width / 2.0f,
-        renderer.height / 2.0f
-    };
-
-    const Vector2 titlePos {
-        anchors.topLeft.x,
-        anchors.topLeft.y
-    };
-
-    const Vector2 newGameButtonPos {
-        center.x-100,
-        center.y
-    };
-
-    const Vector2 continueButtonPos {
-        center.x-100,
-        center.y+75
-    };
 };
 
 #endif //RUNEGUARDTACTICS_GAMEUI_H

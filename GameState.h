@@ -5,7 +5,7 @@
 #ifndef RUNEGUARDTACTICS_GAMESTATE_H
 #define RUNEGUARDTACTICS_GAMESTATE_H
 
-#include "GameStructs.h"
+#include "Data/GameStructs.h"
 class GameState {
 public:
     GameState();

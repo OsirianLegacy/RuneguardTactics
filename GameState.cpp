@@ -135,13 +135,17 @@ void GameState::setGameEvent(gameevent newGameEvent)
         {
             setGameState(gamestate::newgameunitselector);
         }
+
+        if (currentGameEvent == gameevent::starttestcombat)
+        {
+            setGameState(gamestate::combat);
+        }
     }
 }
 
 GameState::GameState() {
 
 }
-
 
 
 

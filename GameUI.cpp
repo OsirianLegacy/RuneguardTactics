@@ -1,6 +1,8 @@
 #include "GameUI.h"
 #include <raylib.h>
 #include <iostream>
+#include <memory>
+
 GameUI::GameUI(Renderer& inrenderer, InputManager& ininputManager)
     : renderer(inrenderer), inputManager(ininputManager)
 {
@@ -9,16 +11,21 @@ GameUI::GameUI(Renderer& inrenderer, InputManager& ininputManager)
 void GameUI::UpdateUI(gamestate gameState)
 {
     this->gameState = gameState;
+    if (mainMenuScreen)
+    {
+        mainMenuScreen->setGameState(gameState);
+    }
+    if (unitSelectorScreen)
+    {
+        unitSelectorScreen->setGameState(gameState);
+    }
 }
 
 void GameUI::loadTextures()
 {
-    buttonNewGameTexture = LoadTexture("Assets/Art/UI/T_Button_NewGame_Idle.png");
-    buttonNewGameHoveredTexture = LoadTexture("Assets/Art/UI/T_Button_NewGame_Hovered.png");
-    buttonNewGameClickedTexture = LoadTexture("Assets/Art/UI/T_Button_NewGame_Clicked.png");
-    buttonContinueGameTexture = LoadTexture("Assets/Art/UI/T_Button_Continue_Idle.png");
-    buttonContinueGameHoveredTexture = LoadTexture("Assets/Art/UI/T_Button_Continue_Hovered.png");
-    buttonContinueGameClickedTexture = LoadTexture("Assets/Art/UI/T_Button_Continue_Clicked.png");
+    buttonIdleTexture = LoadTexture("Assets/Art/UI/T_Button_Idle.png");
+    buttonHoveredTexture = LoadTexture("Assets/Art/UI/T_Button_Hovered.png");
+    buttonClickedTexture = LoadTexture("Assets/Art/UI/T_Button_Clicked.png");
     titleScreenTexture = LoadTexture("Assets/Art/UI/T_TitleScreen.png");
     backgroundTexture4K = LoadTexture("Assets/Art/UI/T_Background_4K.png");
 }
@@ -27,6 +34,28 @@ void GameUI::loadFonts()
 {
     alagard = LoadFontEx("Assets/Fonts/alagard.ttf", 64, nullptr, 0);
     SetTextureFilter(alagard.texture, TEXTURE_FILTER_POINT);
+    createScreens();
+}
+
+void GameUI::createScreens()
+{
+    mainMenuScreen = std::make_unique<MainMenuUI>(
+        renderer,
+        inputManager,
+        titleScreenTexture,
+        buttonIdleTexture,
+        buttonHoveredTexture,
+        buttonClickedTexture,
+        alagard);
+    mainMenuScreen->setGameState(gameState);
+
+    unitSelectorScreen = std::make_unique<unitSelectorUI>(
+        buttonIdleTexture,
+        buttonHoveredTexture,
+        buttonClickedTexture,
+        alagard);
+    unitSelectorScreen->setPosition({500.0f, 500.0f});
+    unitSelectorScreen->setGameState(gameState);
 }
 
     GameUI::UIAnchors GameUI::getAnchors() const
@@ -61,82 +90,36 @@ void GameUI::draw()
 {
     if (gameState == gamestate::mainmenu)
     {
-        // draw the background title screen first. This ensures other elements are drawn on top of it.
-        DrawTexture(titleScreenTexture, titlePos.x, titlePos.y, WHITE);
-
-        // check mouse position every frame
-        Vector2 mousePosition = inputManager.getMousePosition();
-
-        // create collider for newGameButton
-        Rectangle newGameButtonRect
+        if (mainMenuScreen)
         {
-        newGameButtonPos.x, newGameButtonPos.y,
-            static_cast<float>(buttonNewGameTexture.width),
-            static_cast<float>(buttonNewGameTexture.height)
-        };
-
-        // create collider for ContinueGameButton
-        Rectangle ContinueGameButtonRect
-        {
-            continueButtonPos.x, continueButtonPos.y,
-                static_cast<float>(buttonNewGameTexture.width),
-                static_cast<float>(buttonNewGameTexture.height)
-        };
-        // Check if mouse is in the newGameButtonRect
-        bool isHoveringNewGameButton = CheckCollisionPointRec(mousePosition, newGameButtonRect);
-
-        // Check if mouse is in the ContinueGameButtonRect
-        bool isHoveringContinueGameButton = CheckCollisionPointRec(mousePosition, ContinueGameButtonRect);
-
-        // Set the Textures for New and Continue Game Buttons
-        Texture2D newGameTexture = buttonNewGameTexture;
-        Texture2D continueGameTexture = buttonContinueGameTexture;
-
-        // Check if the mouse is Hovering over the New Game Button
-        if (isHoveringNewGameButton)
-        {
-            newGameTexture = buttonNewGameHoveredTexture;
-
-            if (inputManager.isLeftMouseDown())
-            {
-                newGameTexture = buttonNewGameClickedTexture;
-                if (nextGameEvent != gameevent::newgame)
-                {
-                    setGameEvent(gameevent::newgame);
-                    std::cout << "player clicked new game\n";
-                }
-
-            }
+            mainMenuScreen->draw();
         }
-        // Check if the mouse is Hovering over the Continue Game Button
-        if (isHoveringContinueGameButton)
-        {
-            continueGameTexture = buttonContinueGameHoveredTexture;
-            if (inputManager.isLeftMouseDown())
-            {
-                continueGameTexture = buttonContinueGameClickedTexture;
-                if (nextGameEvent != gameevent::continuegame)
-                {
-                    setGameEvent(gameevent::continuegame);
-                    std::cout << "player clicked continue game\n";
-                }
-
-            }
-        }
-        DrawTexture(newGameTexture, newGameButtonPos.x, newGameButtonPos.y, WHITE);
-        DrawTexture(continueGameTexture, continueButtonPos.x, continueButtonPos.y, WHITE);
     }
     if (gameState == gamestate::newgameunitselector)
     {
         DrawTexture(backgroundTexture4K, 0,0, WHITE);
-        DrawRectangle(anchors.center.x+)
+        if (unitSelectorScreen)
+        {
+            unitSelectorScreen->draw();
+        }
     }
 
 }
 
-void GameUI::update() const
+void GameUI::update()
 {
+    if (mainMenuScreen)
+    {
+        if (const gameevent event = mainMenuScreen->update(); event != gameevent::null)
+        {
+            setGameEvent(event);
+        }
+    }
 
+    if (unitSelectorScreen)
+    {
+        unitSelectorScreen->update();
+    }
 }
 
 
@@ -144,4 +127,3 @@ void GameUI::setGameState(gamestate newGameState) {
     gameState = newGameState;
     UpdateUI(gameState);
 }
-

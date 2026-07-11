@@ -5,12 +5,12 @@
 #ifndef RUNEGUARDTACTICS_GRIDVISUALS_H
 #define RUNEGUARDTACTICS_GRIDVISUALS_H
 #include <map>
-#include "GridStructs.h"
+#include "Data/GridStructs.h"
 #include <vector>
 #include <raylib.h>
 #include "GameState.h"
 
-#include "Colors.h"
+#include "Data/Colors.h"
 
 class GridVisuals {
 public:
@@ -35,7 +35,7 @@ public:
     void drawHoveredCell(cell hoveredcell, const gridlayout& layout) const;
 
 private:
-    gamestate gameState;
+    gamestate gameState = gamestate::mainmenu;
 };
 
 

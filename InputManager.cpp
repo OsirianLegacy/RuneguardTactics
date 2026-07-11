@@ -5,7 +5,7 @@
 #include "InputManager.h"
 #include <raylib.h>
 #include "Renderer.h"
-#include "GridStructs.h"
+#include "Data/GridStructs.h"
 #include <iostream>
 InputManager::InputManager(Renderer& inputrenderer)
     : renderer(inputrenderer)

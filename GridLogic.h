@@ -1,5 +1,5 @@
-﻿#pragma once
-#include "GridStructs.h"
+#pragma once
+#include "Data/GridStructs.h"
 #include <map>
 #include <vector>
 

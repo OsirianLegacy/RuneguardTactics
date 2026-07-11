@@ -7,10 +7,13 @@
 #include <raylib.h>
 #include "InputManager.h"
 #include "Missions.h"
+#include "rlImGui.h"
+#include "imgui.h"
 #include "TiledMap.h"
 #include "GameState.h"
 #include "GameUI.h"
 #include "GameEvents.h"
+#include "Editor/EditorUI.h"
 using namespace debugtools;
 
 GridLogic grid(16,16);
@@ -22,6 +25,7 @@ InputManager input(renderer);
 coord clickedCoords = {0,0};
 GameState state;
 GameUI UI(renderer, input);
+EditorUI editorUI;
 
 int main()
 {
@@ -39,20 +43,34 @@ int main()
 
 // ------Window hasn't opened yet, don't load textures before this point------ //
     InitWindow(width, height, "Rune Guard Tactics");
+    SetTargetFPS(120);
+    rlImGuiSetup(true);
+
+
     visuals.loadTextures();
     UI.loadTextures();
     UI.loadFonts();
     MissionManager missionManager;
     MissionDatabase missionDatabase;
+    if (!missionDatabase.loadFromDirectories("Missions", "Encounters"))
+    {
+        std::cout << "Failed to load mission database; test combat button will not start an encounter.\n";
+    }
     CombatManager combatManager(grid);
-    GameEvents events{combatManager, state, input, UI, missionManager};
+    GameEvents events{combatManager, state, input, UI, missionManager, missionDatabase, renderer, visuals};
     events.currentGameEvent = gameevent::null;
 // ------Game Loop starts here, load textures before this point------ //
     while (!WindowShouldClose()) {
         events.checkGameEvent(UI.getGameEvent());
         events.checkGameState(state.getGameState());
         input.update();
+        UI.update();
         input.resolveLeftClick();
+
+        if (state.getGameState() == gamestate::combat)
+        {
+            combatManager.update(GetFrameTime());
+        }
 
         // Gate left click cell fetching unless game state is in combat.
         if (InputManager::wasLeftClicked() && input.isMouseInGrid() && state.getGameState() == gamestate::combat)
@@ -69,9 +87,18 @@ int main()
         renderer.render();
         UI.draw();
 
+        // render editor
+
+        rlImGuiBegin();
+
+        editorUI.draw(state, events, UI, input);
+
+        rlImGuiEnd();
+
         EndDrawing();
     }
     visuals.unloadTextures();
+    rlImGuiShutdown();
     CloseWindow();
     return 0;
 }
